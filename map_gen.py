@@ -20,12 +20,12 @@ def create_grid(random_cell):
     canvas = tk.Canvas(win, width=COLS*CELL, height=ROWS*CELL)
     canvas.pack(expand=True)
 
-    for row in range(ROWS + 1):
+    for row in range(ROWS):
         canvas.create_line(0, row*CELL, COLS*CELL, row*CELL)
-
-    for col in range(COLS + 1):
-        canvas.create_line(col*CELL, 0 ,col*CELL, ROWS*CELL)
-
+        for col in range(COLS + 1):
+            canvas.create_line(col*CELL, 0 ,col*CELL, ROWS*CELL)
+            if (col, row) == random_cell:
+                canvas.create_rectangle(col*CELL, row*CELL, (col+1)*CELL, (row+1)*CELL, fill="red")
 
 win = tk.Tk()
 
