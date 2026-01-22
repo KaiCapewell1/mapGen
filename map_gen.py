@@ -1,14 +1,16 @@
 import tkinter as tk
 import random as r
+import sys
 
 
 CELL = 20
 COLS = 40
 ROWS = 40
 whitespace = 2
-percentage = 50
-
+percentage = 40
 MAP_size = int(((ROWS - whitespace) * (COLS - whitespace)) * (percentage / 100))
+
+
 
 possible_directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # left, right, up, down
 
@@ -20,11 +22,11 @@ def placeWalker():
     
     return(random_col, random_row)
 
-def create_grid(random_cell): 
+def create_grid(random_cell, map_size): 
     lable1 = tk.Label(win, text=f"({random_cell[0]+1},{random_cell[1]+1})", font=("Arial", 16))
     lable1.pack()
 
-    lable2 = tk.Label(win, text=f"MAP Size: {MAP_size}", font=("Arial", 16))
+    lable2 = tk.Label(win, text=f"MAP Size: {map_size}", font=("Arial", 16))
     lable2.pack()
 
     lable3 = tk.Label(win, text=f"Grid Size: {COLS * ROWS}", font=("Arial", 16))
@@ -47,7 +49,7 @@ def create_grid(random_cell):
 def walker_move(random_cell, canvas):
     current_cell = random_cell
 
-    while len(Cell_checker) < MAP_size:
+    if len(Cell_checker) < MAP_size:
         direction = r.choice(possible_directions)
         new_cell = current_cell[0] + direction[0], current_cell[1] + direction[1]
         if (whitespace <= new_cell[0] < COLS - whitespace) and (whitespace <= new_cell[1] < ROWS - whitespace):
@@ -55,6 +57,7 @@ def walker_move(random_cell, canvas):
                 canvas.create_rectangle(new_cell[0]*CELL, new_cell[1]*CELL, (new_cell[0]+1)*CELL, (new_cell[1]+1)*CELL, fill="green")
                 Cell_checker[new_cell] = "floor"
             current_cell = new_cell
+        win.after(1, walker_move, current_cell, canvas)
     else:
          return Create_walls(canvas)
 
@@ -72,10 +75,12 @@ def Create_walls(canvas):
                   
 
 win = tk.Tk()
-
+if sys.argv and len(sys.argv) == 3:
+    percentage = int(sys.argv[1])
+    CELL = int(sys.argv[2])
 random_cell = placeWalker()
 
-create_grid(random_cell)
+create_grid(random_cell, percentage)
 
 win.mainloop()
 
